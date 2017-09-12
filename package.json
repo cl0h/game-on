@@ -1,0 +1,9 @@
+{
+  "name": "socket-chat-foos",
+  "version": "0.0.1",
+  "description": "A socket.io app to allow people to find foosball partners.",
+  "dependencies": {
+    "express": "^4.15.3",
+    "socket.io": "^2.0.1"
+  }
+}
