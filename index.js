@@ -1,8 +1,11 @@
+// Dependencies
 var express = require("express");
 var app = express();
 var http = require("http").Server(app);
 var path = require("path");
 var io = require("socket.io")(http);
+
+const Table = require('./Table/index').Table;
 
 console.log("App started");
 //Routing
@@ -81,40 +84,6 @@ http.listen(3000, function ()
 
 
 //Objects
-
-function Table() {
-    this.players = [];
-	this.MAX_PLAYERS = 4;
-    this.full = false;
-
-    this.addPlayer = function (player) 
-	{
-        if(this.full=== true) return;
-		this.players.push(player);
-        if (this.players.length === this.MAX_PLAYERS) this.full = true;
-    }
-
-    this.logPlayers = function () 
-	{
-        console.log("Table Players: \n");
-		var i;
-        for (i = 0; i < this.players.length; i++) 
-		{
-            this.players[i].log();
-        }
-    }
-	
-	this.clear = function ()
-    {
-        console.log("Clearing table with Players: \n" + this.logPlayers());
-        this.players = new Array();
-        this.full = false;
-    }
-	this.getLength = function ()
-	{
-		return this.players.length;
-	}
-}
 
 function Player(name, clientId) 
 {
