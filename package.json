@@ -4,6 +4,10 @@
   "description": "A socket.io app to allow people to find foosball partners.",
   "bugs": "https://github.com/cl0h/game-on/issues",
   "license": "ISC",
+  "repository" :{ 
+    "type" : "git",
+    "url" : "https://github.com/cl0h/game-on.git"
+  },
   "dependencies": {
     "express": "^4.15.3",
     "socket.io": "^2.0.1"
