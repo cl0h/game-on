@@ -6,6 +6,7 @@ var path = require("path");
 var io = require("socket.io")(http);
 
 const Table = require('./Table/index').Table;
+const Player = require('./Player/index');
 
 console.log("App started");
 //Routing
@@ -81,15 +82,3 @@ http.listen(3000, function ()
 {
     console.log("listening on *:3000");
 });
-
-
-//Objects
-
-function Player(name, clientId) 
-{
-    this.name = name;
-    this.clientId = clientId;
-    this.log = function () {
-        console.log("\tPlayer name: " + name + ", id: " + clientId + "\n");
-    }
-}
