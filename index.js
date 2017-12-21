@@ -5,7 +5,7 @@ var http = require("http").Server(app);
 var path = require("path");
 var io = require("socket.io")(http);
 
-const Table = require('./Table/index').Table;
+const Table = require('./Table/index');
 const Player = require('./Player/index');
 
 console.log("App started");
