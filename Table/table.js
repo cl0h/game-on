@@ -1,6 +1,7 @@
 // Table/table.js
 
 // Generate a table object
+'use strict';
 
 // Construtor
 function Table() {
