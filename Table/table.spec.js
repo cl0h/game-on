@@ -122,7 +122,7 @@ describe('Given table created',() =>{
 	});
 
 	it('should have method to call players log', () => {
-		expect((new Table()).logPlayers).to.be.defined;
+		expect((new Table()).logPlayers).is.not.undefined;
 	});
 
 	it('should call each player log', () =>{
