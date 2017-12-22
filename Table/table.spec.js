@@ -25,7 +25,7 @@ describe('Table Basic testing',() =>{
 	it('should have a players list', () =>{
 		var table = new Table();
 		expect(table.players).is.not.undefined;
-		expect(table.players).to.be.an.array;
+		expect(table.players).to.be.an('array');
 		expect(table.players).to.be.empty;
 	});
 

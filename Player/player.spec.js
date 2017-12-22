@@ -8,9 +8,11 @@ process.env.NODE_ENV = 'test';
 // Dependencies
 const chai = require('chai');
 const sinon = require('sinon');
+const sinonchai = require('sinon-chai');
 
 // Utils
 const expect = chai.expect;
+chai.use(sinonchai);
 
 // Unit tested
 const Player = require('./player');
