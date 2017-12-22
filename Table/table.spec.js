@@ -1,7 +1,7 @@
 // Table/table.spec.js
-
 // Test for table
 
+'use strict';
 // Dependencies
 const chai = require('chai');
 const sinon = require('sinon');
@@ -24,20 +24,20 @@ describe('Table Basic testing',() =>{
 
 	it('should have a players list', () =>{
 		var table = new Table();
-		expect(table.players).to.be.defined;
-		expect(table.players).to.be.an.array;
+		expect(table.players).is.not.undefined;
+		expect(table.players).to.be.an('array');
 		expect(table.players).to.be.empty;
 	});
 
 	it('should have a maximum players', () =>{
 		var table = new Table();
-		expect(table.MAX_PLAYERS).to.be.defined;
+		expect(table.MAX_PLAYERS).is.not.undefined;
 		expect(table.MAX_PLAYERS).to.eq(4);
 	});
 
 	it('should have indicator if table full', () =>{
 		var table = new Table();
-		expect(table.full).to.be.defined;
+		expect(table.full).is.not.undefined;
 		expect(table.full).to.be.false;
 	});
 });
@@ -56,7 +56,7 @@ describe('Given user add player',() =>{
 	});
 
 	it('should have a method', () =>{
-		expect((new Table()).addPlayer).to.be.defined;
+		expect((new Table()).addPlayer).is.not.undefined;
 	});
 
 	it('should add player to list', () =>{
@@ -122,7 +122,7 @@ describe('Given table created',() =>{
 	});
 
 	it('should have method to call players log', () => {
-		expect((new Table()).logPlayers).to.be.defined;
+		expect((new Table()).logPlayers).is.not.undefined;
 	});
 
 	it('should call each player log', () =>{
@@ -151,7 +151,7 @@ describe('Given user wish to empty table',() =>{
 	});
 
 	it('should have the method clear', () => {
-		expect((new Table()).clear).to.be.defined;
+		expect((new Table()).clear).is.not.undefined;
 	});
 
 	it('should have an empty array', () =>{
@@ -168,7 +168,7 @@ describe('Given user wish to empty table',() =>{
 describe('Given user get number of current user',() =>{
 	
 	it('should have getLength', () => {
-		expect((new Table()).getLength).to.be.defined;
+		expect((new Table()).getLength).is.not.undefined;
 	});
 
 	it('should return the number currently registered', () =>{

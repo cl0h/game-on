@@ -8,9 +8,11 @@ process.env.NODE_ENV = 'test';
 // Dependencies
 const chai = require('chai');
 const sinon = require('sinon');
+const sinonchai = require('sinon-chai');
 
 // Utils
 const expect = chai.expect;
+chai.use(sinonchai);
 
 // Unit tested
 const Player = require('./player');
@@ -25,13 +27,13 @@ describe('Player Object Basic test',() =>{
 
 	it('should have name property as string', () =>{
 		var player1 = new Player();
-		expect(player1.name).to.be.defined;
+		expect(player1.name).is.not.undefined;
 		expect(player1.name).to.be.a.string;
 	});
 
 	it('should have clientId property as string', () =>{
 		var player1 = new Player();
-		expect(player1.clientId).to.be.defined;
+		expect(player1.clientId).is.not.undefined;
 		expect(player1.clientId).to.be.a.string;
 	});
 });
@@ -65,7 +67,7 @@ describe('Given user want to log player',() =>{
 	});
 
 	it('should have log method', () => {
-		expect((new Player()).log).to.be.defined;
+		expect((new Player()).log).is.not.undefined;
 	});
 
 	it('should have call console.log', () =>{

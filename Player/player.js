@@ -1,10 +1,11 @@
 // Player/player.js
 
+'use strict';
 // Player Object
 function Player(name, clientId) 
 {
-    this.name = name;
-    this.clientId = clientId;
+    this.name = name || '';
+    this.clientId = clientId || '';
 }
 
 // Generate log
