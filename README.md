@@ -1,6 +1,6 @@
 # game-on
 
-[![Build Status](https://travis-ci.org/Elgismarus/game-on.svg?branch=Travis)](https://travis-ci.org/Elgismarus/game-on)
+[![Build Status](https://travis-ci.org/Elgismarus/game-on.svg?branch=master)](https://travis-ci.org/Elgismarus/game-on)
 
 ## Intro
 A web application where people can let others know they would like to play a game (foosball, ping pong etc.)
@@ -12,8 +12,6 @@ This application runs on Node.JSand uses the Socket.IO library to send messages 
 ## Install
 - Install node
 - run the index.js file using "node index.js"
-
-
 
 
 ## Usage
