@@ -4,9 +4,9 @@
   "description": "A socket.io app to allow people to find foosball partners.",
   "bugs": "https://github.com/cl0h/game-on/issues",
   "license": "ISC",
-  "repository" :{ 
-    "type" : "git",
-    "url" : "https://github.com/cl0h/game-on.git"
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/cl0h/game-on.git"
   },
   "dependencies": {
     "express": "^4.15.3",
@@ -14,6 +14,7 @@
   },
   "devDependencies": {
     "chai": "^4.1.2",
+    "codecov": "^3.0.0",
     "mocha": "^4.0.1",
     "nodemon": "^1.14.1",
     "nyc": "^11.4.1",
@@ -23,8 +24,9 @@
   },
   "scripts": {
     "start": "node index.js",
-    "test": "mocha \"./*/*.spec.js\"",
-    "coverage": "nyc report",
-    "dev": "nodemon index.js"
+    "test": "nyc mocha \"./*/*.spec.js\"",
+    "dev": "nodemon index.js",
+    "check-coverage": "nyc check-coverage --statements 80 --branches 80 --functions 80 --lines 80",
+    "report-coverage": "nyc report --reporter=lcov && codecov"
   }
 }
