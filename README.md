@@ -1,5 +1,7 @@
 # game-on
 
+[![Build Status](https://travis-ci.org/dwyl/learn-travis.svg?branch=Travis)](https://travis-ci.org/dwyl/learn-travis)
+
 ## Intro
 A web application where people can let others know they would like to play a game (foosball, ping pong etc.)
 
