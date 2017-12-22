@@ -1,4 +1,4 @@
-# game-on [![Build Status](https://travis-ci.org/Elgismarus/game-on.svg?branch=master)](https://travis-ci.org/Elgismarus/game-on) [![codecov.io Code Coverage](https://img.shields.io/codecov/c/github/Elgismarus/hapi-auth-jwt2.svg?maxAge=2592000)](https://codecov.io/github/Elgismarus/hapi-auth-jwt2?branch=master)
+# Game-On [![Build Status](https://travis-ci.org/Elgismarus/game-on.svg?branch=master)](https://travis-ci.org/Elgismarus/game-on) [![codecov](https://codecov.io/gh/Elgismarus/game-on/branch/master/graph/badge.svg)](https://codecov.io/gh/Elgismarus/game-on)
 
 ## Intro
 A web application where people can let others know they would like to play a game (foosball, ping pong etc.)
