@@ -1,39 +1,48 @@
 // Tests/Functional/chat.spec.js
-
 // Test home page
+
 'use strict';
+
 // Set up environment
 process.env.NODE_ENV = 'test';
-const PORT = 3000;
 
 // Dependencies
 const chai = require('chai');
-const assert = require('assert');
 const Browser = require('zombie');
 const Helpers = require('./helpers');
+const TestServer = require('./testserver');
 
 // Utils
 const expect = chai.expect;
-Browser.localhost('localhost', PORT);
 
-describe('Foosball Notifier Test Suite',() =>{
+describe('Chat Test Suite',() =>{
 
 	var browser = new Browser();
+	let server, url, port;
 
-	// before('Start server', () =>{
-	// 	this.server = require('../../index.js');
-	// });
+	before('Setting up server', (done) => {
 
-	// after('Shutdown server', (done) =>{
-	// 	this.server.close(done);
-	// });
+		TestServer.run().then(testserver =>{
+			port = testserver.address().port;
+			url = 'http://localhost:' + port;
+			server = testserver;
+			done();
+		}).catch(err =>{
+			done(err);
+		});
+
+	});
+
+	after("Turn off test server",() => {
+		server.close();
+	});
 	
 	before('Query Foosball Notifier page', (done) =>{
-		Helpers.visitAndValidate(browser,'/', done);
+		Helpers.visitAndValidate(browser,url + '/', done);
 	});
 
 	after('Close browser', ()=>{
-		browser.window.close()
+		browser.window.close();
 	});
 
 	describe('When landing on the page',() =>{
@@ -59,7 +68,7 @@ describe('Foosball Notifier Test Suite',() =>{
 					expect(messages.length).to.eq(1);
 					expect(messages[0]).to.contains(testMessage);
 					done();
-				}, 5);
+				}, 10);
 			}).catch(done);
 		});
 

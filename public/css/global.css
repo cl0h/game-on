@@ -11,3 +11,5 @@ button { width: 9%; background: rgb(130, 224, 255); border: none; padding: 10px;
 #messages { list-style-type: none; margin: 0; padding: 0; overflow-y:scroll; height:40%;}
 #messages li { padding: 5px 10px; }
 #messages li:nth-child(odd) { background: #eee; }
+canvas.table{ background-color:transparent; }
+canvas.table.foosball{background-image: url('../images/foostable.png');}

@@ -4,41 +4,53 @@
 'use strict';
 // Set up environment
 process.env.NODE_ENV = 'test';
-const PORT = 3000;
 
 // Dependencies
 const chai = require('chai');
 const Browser = require('zombie');
+const TestServer = require('./testserver');
+const Helpers = require('./helpers');
 
 // Utils
 const expect = chai.expect;
-Browser.localhost('localhost', PORT);
 
 // Test
-describe('Given user go to home page',() =>{
-	
-	var browser = new Browser();
+describe('Home Page Test suite', () => {
 
-	// TODO: Reenable after server refactor
-	// before('Start server', (done) =>{
-	// 	this.server = require('../../index.js');
-	// 	done();
-	// });
+	describe('Given user go to home page', () => {
 
-	// after('Shutdown server', (done) =>{
-	// 	this.server.close(done);
-	// });
+		var browser = new Browser();
 
-	before('Visit page', (done) =>{
-		browser.visit('/', done);
-	});
+		let server, url, port;
 
-	after('Close browser', ()=>{
-		browser.window.close()
-	});
+		before('Setting up server', (done) => {
 
-	it('should load the page', () => {
-		expect(browser.status).to.eq(200);
-		expect(browser.success).to.be.true;	
+			TestServer.run().then(testserver => {
+				port = testserver.address().port;
+				url = 'http://localhost:' + port;
+				server = testserver;
+				done();
+			}).catch(err => {
+				done(err);
+			});
+
+		});
+
+		after("Turn off test server", () => {
+			server.close();
+		});
+
+		before('Visit home page', (done) => {
+			Helpers.visitAndValidate(browser, url + '/', done);
+		});
+
+		after('Close browser', () => {
+			browser.window.close();
+		});
+
+		it('should load the page', () => {
+			expect(browser.status).to.eq(200);
+			expect(browser.success).to.be.true;
+		});
 	});
 });

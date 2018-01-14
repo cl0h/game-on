@@ -14,19 +14,42 @@
   },
   "devDependencies": {
     "chai": "^4.1.2",
+    "chai-match": "^1.1.1",
     "codecov": "^3.0.0",
-    "mocha": "^4.0.1",
-    "nodemon": "^1.14.1",
+    "coveralls": "^3.0.0",
+    "jquery": "^3.2.1",
+    "jshint": "^2.9.5",
+    "mocha": "^4.1.0",
+    "mocha-lcov-reporter": "^1.3.0",
+    "mock-browser": "^0.92.14",
+    "nodemon": "^1.14.3",
     "nyc": "^11.4.1",
+    "proxyquire": "^1.8.0",
     "sinon": "^4.1.3",
     "sinon-chai": "^2.14.0",
+    "socket-tester": "^1.2.1",
+    "socket.io-client": "^2.0.4",
+    "socket.io-mock": "^1.2.3",
     "zombie": "^5.0.7"
   },
   "scripts": {
     "start": "node index.js",
-    "test": "nyc mocha \"./**/*.spec.js\"",
+    "test": "nyc -a mocha \"**/*.spec.js\"",
+    "test:local": "npm run code:analysis && rm -rf coverage && npm test && nyc report --reporter=html",
+    "test:functional": "mocha \"./Tests/**/*.spec.js\"",
+    "test:unit": "nyc -a mocha \"./!(Tests)/**/*.spec.js\"",
+    "test:public": "nyc -a mocha \"./public/js/*.spec.js\"",
     "dev": "nodemon index.js",
-    "check-coverage": "nyc check-coverage --statements 80 --branches 80 --functions 80 --lines 80",
-    "report-coverage": "nyc report --reporter=lcov && codecov"
+    "coverage:check": "nyc check-coverage --statements 80 --branches 80 --functions 80 --lines 80",
+    "coverage:report": "nyc report --reporter=text-lcov | coveralls",
+    "code:analysis": "jshint --extract=auto --show-non-errors *"
+  },
+  "nyc": {
+    "exclude": [
+      ".nyc_ouput",
+      "coverage",
+      "Tests",
+      "**/*.spec.js"
+    ]
   }
 }
