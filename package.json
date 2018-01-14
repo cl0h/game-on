@@ -15,6 +15,7 @@
   "devDependencies": {
     "chai": "^4.1.2",
     "chai-match": "^1.1.1",
+    "codeclimate-test-reporter": "^0.5.0",
     "codecov": "^3.0.0",
     "coveralls": "^3.0.0",
     "jquery": "^3.2.1",
@@ -41,7 +42,7 @@
     "test:public": "nyc -a mocha \"./public/js/*.spec.js\"",
     "dev": "nodemon index.js",
     "coverage:check": "nyc check-coverage --statements 80 --branches 80 --functions 80 --lines 80",
-    "coverage:report": "nyc report --reporter=text-lcov | coveralls",
+    "coverage:report": "nyc report --reporter=text-lcov | coveralls && nyc report --reporter=lcov && codeclimate-test-reporter < coverage/lcov.info",
     "code:analysis": "jshint --extract=auto --show-non-errors *"
   },
   "nyc": {

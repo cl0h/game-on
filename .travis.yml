@@ -1,3 +1,6 @@
+env:
+  global:
+    - CODECLIMATE_REPO_TOKEN: 4a9b5786d4fcc67c9211330a429f8a943914feb9e7b14a5b530212511c894723
 language: node_js
 node_js:
   - "9.3.0"
