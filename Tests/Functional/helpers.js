@@ -4,7 +4,7 @@
 
 // Dependencies
 const chai = require('chai');
-
+const sinon = require('sinon');
 // Utils
 var expect = chai.expect;
 
@@ -24,6 +24,10 @@ var expect = chai.expect;
  * @param  {DOM element} canvas [The canvas to bind]
  */
 function mockifyCanvas(canvas) {
+
+	sinon.stub(canvas, 'tagName').get(function() {
+		return 'CANVAS';
+	});
 
 	canvas.getContext = function() {
 		return {
@@ -72,9 +76,15 @@ module.exports = {
 				browser.wait({
 					element: '#canvas1'
 				}).then(() => {
-					// Need to mock canvas as zombie.js aka jsdom not supporting canvas
-					mockifyCanvas(browser.document.getElementById('canvas1'));
-					done();
+					/**
+					 * TODO: Investigate why timeout without
+					 * using a delay.
+					 */
+					setTimeout(() => {
+						// Need to mock canvas as zombie.js aka jsdom not supporting canvas
+						mockifyCanvas(browser.document.getElementById('canvas1'));
+						done();
+					}, 2);
 				});
 
 			}).catch(done);

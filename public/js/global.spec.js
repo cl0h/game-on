@@ -390,6 +390,7 @@ describe('Global.js Unit Tests', () => {
 		before('Set up socket server', () => {
 			server = new SocketIOMock();
 		});
+
 		before('Create a context', (done) => {
 			let win = getWindow();
 			win.io = function() {
@@ -690,13 +691,14 @@ describe('Global.js Unit Tests', () => {
 		});
 	});
 
-	describe('Clear Table button', () => {
+	describe('Clear Table flow', () => {
 
 		let ctx, server;
 		before('Create server IO', function() {
 			server = new SocketIOMock();
 		});
 
+		let canvas, canvasctx;
 		before('Create a context', (done) => {
 			let win = getWindow();
 			win.io = function() {
@@ -706,6 +708,15 @@ describe('Global.js Unit Tests', () => {
 			let button = win.document.createElement('button');
 			button.id = 'clearTable';
 			win.document.body.appendChild(button);
+
+			canvas = win.document.createElement('form');
+			canvas.id = 'canvas1';
+			canvas.height = 400;
+			canvas.width = 400;
+			mockifyCanvas(canvas);
+			canvasctx = canvas.getContext();
+			sinonbox.stub(canvas, 'getContext').returns(canvasctx);
+			win.document.body.appendChild(canvas);
 
 			win.alert = sinonbox.spy();
 			win.console = console;
@@ -723,6 +734,47 @@ describe('Global.js Unit Tests', () => {
 
 			killer.startWith(done);
 			button.click();
+		});
+
+		it('should have clearTable function', () => {
+			assert.isFunction(ctx.clearTable);
+		});
+
+		it('should take canvas as argument', () => {
+			(() => {
+				ctx.clearTable();
+			}).should.throw();
+
+			(() => {
+				ctx.clearTable(ctx.document.createElement('div'));
+			}).should.throw();
+
+			assert.equal(canvas.tagName, 'CANVAS');
+			(() => {
+				ctx.clearTable(canvas);
+			}).should.not.throw();
+		});
+
+		it('should call clearRect', () => {
+			let spy = sinonbox.spy(canvasctx, 'clearRect');
+			ctx.clearTable(canvas);
+			spy.should.have.been.calledOnce;
+			spy.should.have.been.calledWith(0, 0, canvas.width, canvas.height);
+		});
+
+		it('should have clear_table event listener', (done) => {
+			let spy = sinonbox.spy(ctx, 'clearTable');
+			server.socketClient.once(TableEventType.CLEAR_TABLE, () => {
+				killer.cancel();
+				try {
+					spy.should.have.been.called;
+					done();
+				} catch (e) {
+					done(e);
+				}
+			});
+			killer.startWith(done);
+			server.emit(TableEventType.CLEAR_TABLE);
 		});
 	});
 

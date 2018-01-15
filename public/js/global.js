@@ -85,6 +85,15 @@ function addPlayerCanvas(playerName, num) {
 	ctx.strokeText(playerName, strokeArgs[0], strokeArgs[1]);
 }
 
+function clearTable(canvas){
+	if(canvas === undefined || canvas.tagName !== 'CANVAS'){
+		throw new Error('Canvas required');
+	}
+
+	let ctx = canvas.getContext('2d');
+	ctx.clearRect(0, 0, canvas.width, canvas.height);
+}
+
 function updateTable(players) {
 
 	if (players !== undefined) {
@@ -188,5 +197,9 @@ $(function() {
 	 */
 	socket.on('full_table', function() {
 		alert("Table is already full. Use the Clear button to start fresh.");
+	});
+
+	socket.on('clear_table', function(){
+		clearTable(document.getElementById('canvas1'));
 	});
 });

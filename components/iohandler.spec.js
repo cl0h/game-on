@@ -168,7 +168,7 @@ describe('iohandler Unit Test', () => {
 
 	describe('Clear Table event', () => {
 
-		it('should update the table when clear table called', (done) => {
+		it('should send to all client when requested by one client', (done) => {
 
 			let spy = sinon.spy(table, 'clear');
 			assert.lengthOf(table.players, 0);
@@ -178,7 +178,7 @@ describe('iohandler Unit Test', () => {
 				table.players.push('Tester' + i);
 			}
 
-			client.once(TableEventType.UPDATE_TABLE, players => {
+			client.once(TableEventType.CLEAR_TABLE, players => {
 				killer.cancel();
 				spy.should.have.been.calledOnce;
 				loggerSpy.should.have.been.calledOnce;

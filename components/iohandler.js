@@ -41,7 +41,7 @@ module.exports = function(server, table) {
 		socket.on(TableEventType.CLEAR_TABLE, function() {
 			log('Clear sent by: ' + socket.id);
 			table.clear();
-			io.emit('update_table', table.players);
+			io.emit(TableEventType.CLEAR_TABLE, table.players);
 			log('update table sent');
 		});
 

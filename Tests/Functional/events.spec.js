@@ -236,12 +236,12 @@ describe('Events handler Test Suite', () => {
 
 		});
 
-		it('should send updateTable when clearTable called', (done) => {
+		it('should send clear_table when clearTable called', (done) => {
 
 			var client1 = io.connect(SOCKET_URL, clientOptions);
 			var killer = killClient(client1, done);
 
-			client1.once(TableEventType.UPDATE_TABLE, () => {
+			client1.once(TableEventType.CLEAR_TABLE, () => {
 				clearTimeout(killer);
 				try {
 					expect(log.calledWith(sinon.match(patternClearTable))).to.be.true;
