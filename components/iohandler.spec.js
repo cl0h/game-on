@@ -53,15 +53,18 @@ describe('iohandler Unit Test', () => {
 	socketServer.broadcast.emit = function(eventkey) {
 		socketServer.emit(eventkey);
 	};
-	Object.keys(TableEventType).forEach(key => {
-		server.on(TableEventType[key], data => {
-			socketServer.emit(TableEventType[key], data);
+
+	/**
+	 * Bind server events to socket events
+	 */
+	[TableEventType, ChatEventType].forEach(EventType =>{
+
+		Object.keys(EventType).forEach(key => {
+			server.on(EventType[key], data => {
+				socketServer.emit(EventType[key], data);
+			});
 		});
-	});
-	Object.keys(ChatEventType).forEach(key => {
-		server.on(ChatEventType[key], data => {
-			socketServer.emit(ChatEventType[key], data);
-		});
+
 	});
 
 	function Player(name, socketid) {
