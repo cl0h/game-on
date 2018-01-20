@@ -57,7 +57,7 @@ describe('iohandler Unit Test', () => {
 	/**
 	 * Bind server events to socket events
 	 */
-	[TableEventType, ChatEventType].forEach(EventType =>{
+	[TableEventType, ChatEventType].forEach(EventType => {
 
 		Object.keys(EventType).forEach(key => {
 			server.on(EventType[key], data => {
@@ -98,7 +98,7 @@ describe('iohandler Unit Test', () => {
 		}
 	};
 
-	before('Set up IO handler', () =>{
+	before('Set up IO handler', () => {
 		iohandler(null, table);
 	});
 
@@ -203,21 +203,35 @@ describe('iohandler Unit Test', () => {
 
 	describe('Add player', () => {
 
+		/**
+		 * Once connected binding event
+		 * @param {object} client   [listener client]
+		 * @param {string} evt      [event to listen]
+		 * @param {string} emit_evt [event to emit]
+		 * @param {any} data     	[data to send]
+		 */
+		function onceConnectedEmit(client, evt, emit_evt, data) {
+
+			client.once(evt, () => {
+				loggerSpy.resetHistory();
+				client.emit(emit_evt, data);
+			});
+		}
+
 		it('should send to sender table full', (done) => {
 			table.full = true;
 			let player = [{
 				name: 'Tester1'
 			}];
+			
 			client.once(TableEventType.FULL_TABLE, () => {
 				killer.cancel();
 				loggerSpy.should.have.been.calledTwice;
 				done();
 			});
 
-			client.once(TableEventType.DRAW_TABLE, () => {
-				loggerSpy.resetHistory();
-				client.emit(TableEventType.ADD_PLAYER, player);
-			});
+			onceConnectedEmit(client, TableEventType.DRAW_TABLE,
+				TableEventType.ADD_PLAYER, player);
 
 			killer.startWith(done);
 			client.connect();
@@ -240,10 +254,8 @@ describe('iohandler Unit Test', () => {
 				done();
 			});
 
-			client.once(TableEventType.DRAW_TABLE, () => {
-				loggerSpy.resetHistory();
-				client.emit(TableEventType.ADD_PLAYER, expectedPlayers);
-			});
+			onceConnectedEmit(client, TableEventType.DRAW_TABLE,
+				TableEventType.ADD_PLAYER, expectedPlayers);
 
 			killer.startWith(done);
 			client.connect();
@@ -263,10 +275,8 @@ describe('iohandler Unit Test', () => {
 				done();
 			});
 
-			client.once(TableEventType.DRAW_TABLE, () => {
-				loggerSpy.resetHistory();
-				client.emit(TableEventType.ADD_PLAYER, expectedPlayers);
-			});
+			onceConnectedEmit(client, TableEventType.DRAW_TABLE,
+				TableEventType.ADD_PLAYER, expectedPlayers);
 
 			killer.startWith(done);
 			client.connect();
@@ -287,10 +297,9 @@ describe('iohandler Unit Test', () => {
 				done(new Error('should not have trigger start table'));
 			});
 
-			client.once(TableEventType.DRAW_TABLE, () => {
-				loggerSpy.resetHistory();
-				client.emit(TableEventType.ADD_PLAYER, [new Player('Tester3', socketServer.id)]);
-			});
+			onceConnectedEmit(client, TableEventType.DRAW_TABLE,
+				TableEventType.ADD_PLAYER, [new Player('Tester3', socketServer.id)]);
+
 
 			killer.startWith(done);
 			client.connect();
