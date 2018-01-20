@@ -14,7 +14,32 @@ const Table = require('./table');
 process.env.NODE_ENV = 'test';
 
 // Test
-describe('Table Unit Testing', () =>{
+describe('Table Unit Testing', () => {
+
+	/**
+	 * Create an array of players object
+	 * @param  {number} number       [Number of player]
+	 * @param  {Table} foosballTable [Optional: Table object]
+	 * @return {Array}               [Array containing player object]
+	 */
+	function createPlayers(number, opt_foosballTable) {
+
+		let players= [];
+
+		for (var i = 0; i < number; i++) {
+			players.push({
+				name: 'Player' + i,
+				log: sinon.spy()
+			});
+
+			if(opt_foosballTable !== undefined){
+				opt_foosballTable.addPlayer(players[i]);
+			}
+		}
+
+		return players;
+
+	}
 
 	describe('Table Basic testing', () => {
 
@@ -49,12 +74,7 @@ describe('Table Unit Testing', () =>{
 		var players;
 
 		beforeEach('Init players', () => {
-			players = [];
-			for (var i = 0; i < 4; i++) {
-				players.push({
-					name: 'Player' + i
-				});
-			}
+			players = createPlayers(4);
 		});
 
 		it('should have a method', () => {
@@ -110,16 +130,8 @@ describe('Table Unit Testing', () =>{
 		var players, foosballTable;
 
 		beforeEach('Init players', () => {
-			players = [];
 			foosballTable = new Table();
-			for (var i = 0; i < 4; i++) {
-				players.push({
-					name: 'Player' + i,
-					log: sinon.spy()
-				});
-
-				foosballTable.addPlayer(players[i]);
-			}
+			players = createPlayers(4, foosballTable);
 			expect(foosballTable.full).to.be.true;
 		});
 
@@ -176,20 +188,14 @@ describe('Table Unit Testing', () =>{
 
 		it('should return the number currently registered', () => {
 			var foosballTable = new Table();
-			for (var i = 0; i < 2; i++) {
-				foosballTable.addPlayer('Player' + i);
-			}
-
+			createPlayers(2, foosballTable);
 			var numberPlayers = foosballTable.getLength();
 			expect(numberPlayers).to.eq(2);
 		});
 
 		it('should return max number players if table full', () => {
 			var foosballTable = new Table();
-			for (var i = 0; i < 5; i++) {
-				foosballTable.addPlayer('Player' + i);
-			}
-
+			createPlayers(5, foosballTable);
 			var numberPlayers = foosballTable.getLength();
 			expect(numberPlayers).to.eq(4);
 		});

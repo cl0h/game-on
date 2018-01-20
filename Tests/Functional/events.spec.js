@@ -76,14 +76,7 @@ describe('Events handler Test Suite', () => {
 		server.close(done);
 	});
 
-	describe('Single or multiple client', () => {
-
-		var patternConnected = /^(Connected\. ID:\s).*?$/;
-		var patternDisconnected = /^(Disconnected ID:\s).*?$/;
-		var patternClearTable = /^(Clear sent by:\s).*?$/;
-		var patternAddPlayer = /^(Add received from:\s).*?$/;
-		var patternFullTable = /^(Full table sent to\s).*?$/;
-
+	context('Single or multiple client', () => {
 
 		// Util function killer timeout
 		function killClient(client, fn, time) {
@@ -101,34 +94,47 @@ describe('Events handler Test Suite', () => {
 				fn(new Error('Message not received below ' + time + 'ms.'));
 			}, time);
 		}
+		
+		var patternConnected = /^(Connected\. ID:\s).*?$/;
+		var patternDisconnected = /^(Disconnected ID:\s).*?$/;
+		var patternClearTable = /^(Clear sent by:\s).*?$/;
+		var patternAddPlayer = /^(Add received from:\s).*?$/;
+		var patternFullTable = /^(Full table sent to\s).*?$/;
+
+		function validateRegex(pattern, positive, negative){
+			var regx = new RegExp(pattern);
+			expect(regx.test(positive)).to.be.true;
+			expect(regx.test(negative)).to.be.false;
+		}
+
 		before('Testing connect regex', () => {
-			var regx = new RegExp(patternConnected);
-			expect(regx.test('Connected. ID: Q-abf2C4d_448e')).to.be.true;
-			expect(regx.test('Should not pass. ID: Q-abf2C4_d448e')).to.be.false;
+			validateRegex(patternConnected,
+				'Connected. ID: Q-abf2C4d_448e',
+				'Should not pass. ID: Q-abf2C4_d448e');
 		});
 
 		before('Testing disconnect regex', () => {
-			var regx = new RegExp(patternDisconnected);
-			expect(regx.test('Disconnected ID: Q-abf2C4d448e')).to.be.true;
-			expect(regx.test('Should not pass. ID: Q-abf2C4d448e')).to.be.false;
+			validateRegex(patternDisconnected,
+				'Disconnected ID: Q-abf2C4d448e',
+				'Should not pass. ID: Q-abf2C4d448e');
 		});
 
 		before('Testing tableClear regex', () => {
-			var regx = new RegExp(patternClearTable);
-			expect(regx.test('Clear sent by: Q-abf2C4d_448e')).to.be.true;
-			expect(regx.test('Should not pass. ID: Q-abf2C4_d448e')).to.be.false;
+			validateRegex(patternClearTable,
+				'Clear sent by: Q-abf2C4d_448e',
+				'Should not pass. ID: Q-abf2C4_d448e');
 		});
 
 		before('Testing addPlayer regex', () => {
-			var regx = new RegExp(patternAddPlayer);
-			expect(regx.test('Add received from: Q-abf2C4d_448e')).to.be.true;
-			expect(regx.test('Should not pass. ID: Q-abf2C4_d448e')).to.be.false;
+			validateRegex(patternAddPlayer,
+				'Add received from: Q-abf2C4d_448e',
+				'Should not pass. ID: Q-abf2C4_d448e');
 		});
 
 		before('Testing full table regex', () => {
-			var regx = new RegExp(patternFullTable);
-			expect(regx.test('Full table sent to Q-abf2C4d_448e')).to.be.true;
-			expect(regx.test('Should not pass. ID: Q-abf2C4_d448e')).to.be.false;
+			validateRegex(patternFullTable,
+				'Full table sent to Q-abf2C4d_448e',
+				'Should not pass. ID: Q-abf2C4_d448e');
 		});
 
 		afterEach('Reset spy counter', () => {
