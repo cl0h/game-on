@@ -142,7 +142,6 @@ describe('Table Unit Testing', () => {
 		it('should call each player log', () => {
 			foosballTable.logPlayers();
 			for (var i = 0; i < foosballTable.length; i++) {
-
 				players[i].log.calledOnce;
 			}
 		});
@@ -155,13 +154,7 @@ describe('Table Unit Testing', () => {
 		beforeEach('Init players', () => {
 			players = [];
 			foosballTable = new Table();
-			for (var i = 0; i < 4; i++) {
-				players.push({
-					name: 'Player' + i,
-					log: sinon.spy()
-				});
-				foosballTable.addPlayer(players[i]);
-			}
+			createPlayers(4, foosballTable);
 			expect(foosballTable.full).to.be.true;
 		});
 
@@ -182,22 +175,24 @@ describe('Table Unit Testing', () => {
 
 	describe('Given user get number of current user', () => {
 
+		let foosballTable;
+
+		beforeEach('Create table object', () =>{
+			foosballTable = new Table();
+		});
+
 		it('should have getLength', () => {
 			expect((new Table()).getLength).is.not.undefined;
 		});
 
 		it('should return the number currently registered', () => {
-			var foosballTable = new Table();
 			createPlayers(2, foosballTable);
-			var numberPlayers = foosballTable.getLength();
-			expect(numberPlayers).to.eq(2);
+			expect(foosballTable.getLength()).to.eq(2);
 		});
 
 		it('should return max number players if table full', () => {
-			var foosballTable = new Table();
 			createPlayers(5, foosballTable);
-			var numberPlayers = foosballTable.getLength();
-			expect(numberPlayers).to.eq(4);
+			expect(foosballTable.getLength()).to.eq(4);
 		});
 
 	});
