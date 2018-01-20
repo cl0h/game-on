@@ -1,51 +1,32 @@
-// Tests/Functional/chat.spec.js
-// Test home page
-
 'use strict';
 
-// Set up environment
-process.env.NODE_ENV = 'test';
+/**
+ * Test chat page
+ */
 
 // Dependencies
-const chai = require('chai');
+const testSetup = require('./testsetup');
 const Browser = require('zombie');
 const Helpers = require('./helpers');
-const TestServer = require('./testserver');
-
-// Utils
-const expect = chai.expect;
 
 describe('Chat Test Suite',() =>{
 
-	var browser = new Browser();
-	let server, url, port;
-
-	before('Setting up server', (done) => {
-
-		TestServer.run().then(testserver =>{
-			port = testserver.address().port;
-			url = 'http://localhost:' + port;
-			server = testserver;
-			done();
-		}).catch(err =>{
-			done(err);
-		});
-
-	});
-
-	after("Turn off test server",() => {
-		server.close();
-	});
+	let testargs={
+		url: ''
+	};
+	testSetup.testServerBeforeAfter(testargs);
 	
-	before('Query Foosball Notifier page', (done) =>{
-		Helpers.visitAndValidate(browser,url + '/', done);
+	var browser = new Browser();
+	
+	before('Visit chat page', (done) =>{
+		Helpers.visitAndValidate(browser,testargs.url + '/', done);
 	});
 
 	after('Close browser', ()=>{
 		browser.window.close();
 	});
 
-	describe('When landing on the page',() =>{
+	context('When landing on the page',() =>{
 
 		it('should contains chat elements', () =>{
 			expect(browser.query('#messages')).is.not.undefined;
@@ -54,7 +35,7 @@ describe('Chat Test Suite',() =>{
 		});
 	});
 
-	describe('When submitting a message',() =>{
+	context('When submitting a message',() =>{
 		
 		it('should populate chat box', (done) => {
 			var testMessage = 'This is a test';

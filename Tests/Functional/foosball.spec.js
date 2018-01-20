@@ -2,8 +2,7 @@
 // Test home page
 'use strict';
 
-// Set up environment
-process.env.NODE_ENV = 'test';
+const testSetup = require('./testsetup');
 
 // Dependencies
 const chai = require('chai');
@@ -11,18 +10,20 @@ const sinon = require('sinon');
 const sinonchai = require('sinon-chai');
 const Browser = require('zombie');
 const Helpers = require('./helpers');
-const TestServer = require('./testserver');
 
 // Utils
-const expect = chai.expect;
-const assert = chai.assert;
 chai.should();
 chai.use(sinonchai);
 
 describe('Foosball Notifier Test Suite', () => {
 
+	let testargs = {
+		url:''
+	};
+	testSetup.testServerBeforeAfter(testargs);
+	
 	var browser = new Browser();
-	let server, url, port;
+	
 
 	let sinonbox;
 	before('Setting up sinon sandbox', () => {
@@ -35,27 +36,8 @@ describe('Foosball Notifier Test Suite', () => {
 		sinonbox.reset();
 	});
 
-	before('Setting up server', (done) => {
-		try {
-			TestServer.run().then(testserver => {
-				port = testserver.address().port;
-				url = 'http://localhost:' + port;
-				server = testserver;
-				done();
-			}).catch(err => {
-				done(err);
-			});
-		} catch (e) {
-			done(e);
-		}
-	});
-
-	after("Turn off test server", () => {
-		server.close();
-	});
-
-	before('Query Foosball Notifier page', (done) => {
-		Helpers.visitAndValidate(browser, url + '/', done);
+	before('Visit Foosball Notifier page', (done) => {
+		Helpers.visitAndValidate(browser, testargs.url + '/', done);
 	});
 
 	after('Close browser', (done) => {
@@ -67,7 +49,7 @@ describe('Foosball Notifier Test Suite', () => {
 		}
 	});
 
-	describe('When registering for a game', () => {
+	context('When registering for a game', () => {
 
 		it('should notify in chat user joined', (done) => {
 
@@ -89,7 +71,7 @@ describe('Foosball Notifier Test Suite', () => {
 		});
 	});
 
-	describe('When click clear table', () => {
+	context('When click clear table', () => {
 
 		it('should clear the table', (done) => {
 			expect(browser.query('#canvas1')).is.not.undefined;

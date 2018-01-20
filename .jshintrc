@@ -93,6 +93,10 @@
         
         // Browser global
         "$"         : true, 
-        "alert"     : true
+        "alert"     : true,
+
+        // Unit tests
+        "assert"    : true,
+        "expect"    : true
     }
 }
