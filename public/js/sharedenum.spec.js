@@ -18,6 +18,27 @@ chai.should();
 
 describe('Shared Enum Unit Test', () => {
 
+	/**
+	 * Validate the enum provided has each element required
+	 * @param  {Enum} enum_type	[The enumerator holder]
+	 * @param  {Array} arr_el   [Array of each element required]
+	 */
+	function assertEnumValide(enum_type, arr_el) {
+
+		if(enum_type === undefined || arr_el === undefined){
+			throw new Error("assertEnumValide required enumerator and array");
+		}
+
+		arr_el.forEach( el => {
+			assert.isDefined(enum_type[el], el + ' defined?');
+			assert.typeOf(enum_type[el], 'string', el + ' is string?');
+			(() => {
+				enum_type[el] = 'test';
+			}).should.throw(Error);
+			assert.equal(enum_type[el], el.toLowerCase(), el + 'read-only?');
+		});
+	}
+
 	describe('Front end loading', () => {
 
 		it('should only assign to module.exports if exist', () => {
@@ -69,19 +90,12 @@ describe('Shared Enum Unit Test', () => {
 		});
 
 		it('should have properties read-only', () => {
-			['DENIED', 'GRANTED', 'DEFAULT']
-			.forEach(permission => {
-				assert.isDefined(PermissionType[permission], permission + ' defined?');
-				assert.typeOf(PermissionType[permission], 'string', permission + ' is string?');
-				(() => {
-					PermissionType[permission] = 'test';
-				}).should.throw(Error);
-				assert.equal(PermissionType[permission], permission.toLowerCase(), permission + 'read-only?');
-			});
+			assertEnumValide(PermissionType, ['DENIED', 'GRANTED', 'DEFAULT']);
 		});
 	});
 
 	describe('Chat Event Type', () => {
+		
 		let ChatEventType;
 		before('Extract Chat Type', () => {
 			ChatEventType = require('./sharedenum').ChatEventType;
@@ -92,19 +106,12 @@ describe('Shared Enum Unit Test', () => {
 		});
 
 		it('should have properties read-only', () => {
-			['CHAT']
-			.forEach(event => {
-				assert.isDefined(ChatEventType[event], event + ' defined?');
-				assert.typeOf(ChatEventType[event], 'string', event + ' is string?');
-				(() => {
-					ChatEventType[event] = 'test';
-				}).should.throw(Error);
-				assert.equal(ChatEventType[event], event.toLowerCase(), event + ' read-only?');
-			});
+			assertEnumValide(ChatEventType, ['CHAT']);
 		});
 	});
 
 	describe('Table Event Type', () => {
+		
 		var TableEventType;
 		before('Extract Table Event Type', () => {
 			TableEventType = require('./sharedenum').TableEventType;
@@ -115,17 +122,10 @@ describe('Shared Enum Unit Test', () => {
 		});
 
 		it('should have properties read-only', () => {
-			['START_TABLE', 'DRAW_TABLE', 'UPDATE_TABLE',
+			assertEnumValide(TableEventType,
+				['START_TABLE', 'DRAW_TABLE', 'UPDATE_TABLE',
 				'FULL_TABLE', 'CLEAR_TABLE', 'ADD_PLAYER'
-			]
-			.forEach(event => {
-				assert.isDefined(TableEventType[event], event + ' defined?');
-				assert.typeOf(TableEventType[event], 'string', event + ' is string?');
-				(() => {
-					TableEventType[event] = 'test';
-				}).should.throw(Error);
-				assert.equal(TableEventType[event], event.toLowerCase(), event + ' rea	d-only?');
-			});
+			]);
 		});
 	});
 });
