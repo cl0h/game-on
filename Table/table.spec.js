@@ -188,20 +188,14 @@ describe('Table Unit Testing', () => {
 
 		it('should return the number currently registered', () => {
 			var foosballTable = new Table();
-			for (var i = 0; i < 2; i++) {
-				foosballTable.addPlayer('Player' + i);
-			}
-
+			createPlayers(2, foosballTable);
 			var numberPlayers = foosballTable.getLength();
 			expect(numberPlayers).to.eq(2);
 		});
 
 		it('should return max number players if table full', () => {
 			var foosballTable = new Table();
-			for (var i = 0; i < 5; i++) {
-				foosballTable.addPlayer('Player' + i);
-			}
-
+			createPlayers(5, foosballTable);
 			var numberPlayers = foosballTable.getLength();
 			expect(numberPlayers).to.eq(4);
 		});
