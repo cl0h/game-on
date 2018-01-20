@@ -104,7 +104,7 @@ describe('Events handler Test Suite', () => {
 		function validateRegex(pattern, positive, negative){
 			var regx = new RegExp(pattern);
 			expect(regx.test(positive)).to.be.true;
-			expect(regx.test(negative).to.be.false;
+			expect(regx.test(negative)).to.be.false;
 		}
 
 		before('Testing connect regex', () => {
