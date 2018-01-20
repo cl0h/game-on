@@ -1,5 +1,5 @@
 {
-  "name": "socket-chat-foos",
+  "name": "game-on",
   "version": "0.0.1",
   "description": "A socket.io app to allow people to find foosball partners.",
   "bugs": "https://github.com/cl0h/game-on/issues",

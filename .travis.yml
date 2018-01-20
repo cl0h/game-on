@@ -1,6 +1,6 @@
 env:
   global:
-    - CODECLIMATE_REPO_TOKEN: 4a9b5786d4fcc67c9211330a429f8a943914feb9e7b14a5b530212511c894723
+    - TOOL_LIST="TRAVIS-CI COVERALL CODECLIMATE DAVID-DM"
 language: node_js
 node_js:
   - "9.3.0"
@@ -11,3 +11,4 @@ script:
   - npm run coverage:check
 after_success:
   - npm run coverage:report
+  - bash <(curl -s -L $SCRIPT_GIST_UPDATE_BADGES) && bash <(curl -s -L $SCRIPT_GIST_PUSH)
