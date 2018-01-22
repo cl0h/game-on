@@ -1,4 +1,6 @@
-# game-on
+# game-on [![Build Status](https://travis-ci.org/Elgismarus/game-on.svg?branch=master)](https://travis-ci.org/Elgismarus/game-on?branch=master) [![Coverage Status](https://coveralls.io/repos/github/Elgismarus/game-on/badge.svg?branch=master)](https://coveralls.io/github/Elgismarus/game-on?branch=master) [![Maintainability](https://api.codeclimate.com/v1/badges/20fa6c7180787dd18471/maintainability)](https://codeclimate.com/github/Elgismarus/game-on/maintainability) [![Dependencies Status](https://david-dm.org/Elgismarus/game-on/status.svg)](https://david-dm.org/Elgismarus/game-on) 
+ 
+
 
 ## Intro
 A web application where people can let others know they would like to play a game (foosball, ping pong etc.)
@@ -10,8 +12,6 @@ This application runs on Node.JSand uses the Socket.IO library to send messages 
 ## Install
 - Install node
 - run the index.js file using "node index.js"
-
-
 
 
 ## Usage

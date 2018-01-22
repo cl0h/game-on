@@ -1,0 +1,14 @@
+env:
+  global:
+    - TOOL_LIST="TRAVIS-CI COVERALL CODECLIMATE DAVID-DM"
+language: node_js
+node_js:
+  - "9.3.0"
+before_script:
+  - npm run code:analysis
+script:
+  - npm test
+  - npm run coverage:check
+after_success:
+  - npm run coverage:report
+  - bash <(curl -s -L $SCRIPT_GIST_UPDATE_BADGES) && bash <(curl -s -L $SCRIPT_GIST_PUSH)
