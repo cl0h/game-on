@@ -31,7 +31,7 @@
     "socket-tester": "^1.2.1",
     "socket.io-client": "^2.5.0",
     "socket.io-mock": "^1.2.3",
-    "zombie": "^5.0.7"
+    "zombie": "^6.1.4"
   },
   "scripts": {
     "start": "node index.js",
