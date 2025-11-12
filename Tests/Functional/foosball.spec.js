@@ -5,15 +5,12 @@
 const testSetup = require('./testsetup');
 
 // Dependencies
-const chai = require('chai');
-const sinon = require('sinon');
-const sinonchai = require('sinon-chai');
+
 const Browser = require('zombie');
 const Helpers = require('./helpers');
 
 // Utils
-chai.should();
-chai.use(sinonchai);
+
 
 describe('Foosball Notifier Test Suite', () => {
 
@@ -26,21 +23,19 @@ describe('Foosball Notifier Test Suite', () => {
 	
 
 	let sinonbox;
-	before('Setting up sinon sandbox', () => {
+	beforeAll(() => {
 		sinonbox = sinon.sandbox.create();
 	});
 
-	afterEach('Clear sinon sandbox', () => {
-		sinonbox.restore();
-		sinonbox.resetBehavior();
-		sinonbox.reset();
+	afterEach(() => {
+		jest.clearAllMocks();
 	});
 
-	before('Visit Foosball Notifier page', (done) => {
+	beforeAll((done) => {
 		Helpers.visitAndValidate(browser, testargs.url + '/', done);
 	});
 
-	after('Close browser', (done) => {
+	afterAll((done) => {
 		try {
 			browser.window.close();
 			done();
@@ -49,11 +44,11 @@ describe('Foosball Notifier Test Suite', () => {
 		}
 	});
 
-	context('When registering for a game', () => {
+	describe('When registering for a game', () => {
 
 		it('should notify in chat user joined', (done) => {
 
-			expect(browser.query('#messages')).is.not.undefined;
+			expect(browser.query('#messages')).toBeDefined();
 
 			browser
 				.fill('name', 'Frank')
@@ -63,15 +58,15 @@ describe('Foosball Notifier Test Suite', () => {
 					// Timeout to wait for message to populate
 					setTimeout(() => {
 						var messages = browser.text('#messages').split('\n');
-						expect(messages.length).to.eq(1);
-						expect(messages[0]).to.contains('New player join');
+						expect(messages).toHaveLength(1);
+						expect(messages[0]).toContain('New player join');
 						done();
 					}, 10);
 				}).catch(done);
 		});
 	});
 
-	context('When click clear table', () => {
+	describe('When click clear table', () => {
 
 		it('should clear the table', (done) => {
 			expect(browser.query('#canvas1')).is.not.undefined;
@@ -82,10 +77,10 @@ describe('Foosball Notifier Test Suite', () => {
 			// as zombie.js through jsdom 
 			// does not support canvas
 			let ctx = canvas.getContext('2d');
-			sinonbox.stub(canvas, 'getContext')
-				.returns(ctx);
-			sinonbox.stub(ctx, 'strokeText')
-				.callsFake((name) => {
+			jest.spyOn(canvas, 'getContext')
+				.mockImplementation(() => ctx);
+			jest.spyOn(ctx, 'strokeText')
+				.mockImplementation((name) => {
 					let prefix = 'data:image/png;base64,';
 					if (!dataUrl.startsWith(prefix)) {
 						dataUrl = prefix;
@@ -93,12 +88,12 @@ describe('Foosball Notifier Test Suite', () => {
 					dataUrl += new Buffer(name)
 						.toString('base64');
 				});
-			sinonbox.stub(ctx, 'clearRect')
-				.callsFake(() => {
+			jest.spyOn(ctx, 'clearRect')
+				.mockImplementation(() => {
 					dataUrl = blankDataUrl;
 				});
-			sinonbox.stub(canvas, 'toDataURL')
-				.callsFake(() => {
+			jest.spyOn(canvas, 'toDataURL')
+				.mockImplementation(() => {
 					return dataUrl;
 				});
 
@@ -115,12 +110,12 @@ describe('Foosball Notifier Test Suite', () => {
 							setTimeout(() => {
 
 								try {
-									expect(canvas).is.not.undefined;
-									assert.isFunction(canvas.toDataURL);
-									assert.isFunction(canvas.getContext);
-									assert.isObject(canvas.getContext('2d'));
-									assert.isDefined(ctx);
-									canvas.toDataURL().should.equal(blankDataUrl);
+									expect(canvas).toBeDefined();
+									expect(typeof canvas.toDataURL).toBe('function');
+										expect(typeof canvas.getContext).toBe('function');
+										expect(typeof canvas.getContext('2d')).toBe('object');
+										expect(ctx).toBeDefined();
+									expect(canvas.toDataURL()).toEqual(blankDataUrl);
 									done();
 								} catch (e) {
 									done(e);
@@ -137,7 +132,7 @@ describe('Foosball Notifier Test Suite', () => {
 					.pressButton('Notify me!')
 					.then(() => {
 						try {
-							assert.isDefined(canvas.toDataURL());
+							expect(canvas.toDataURL()).toBeDefined();
 							canvas.toDataURL().should.not.equal(blankDataUrl);
 							next(idx, array);
 						} catch (e) {

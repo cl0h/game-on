@@ -5,45 +5,37 @@
 process.env.NODE_ENV = 'test';
 
 // Dependencies
-const chai = require('chai');
-const sinon = require('sinon');
-const sinonchai = require('sinon-chai');
-const proxyquire = require('proxyquire').noPreserveCache();
+
 
 // Utils
-const expect = chai.expect;
-chai.should();
-chai.use(sinonchai);
+
+
+const loggerspy = jest.fn();
+
+
+
+const Player = require('./player');
 
 describe('Player Unit Test', () => {
-
-	let loggerspy = sinon.spy();
-	
-	// Unit tested
-	let Player = proxyquire('./player', {
-		'../utils': {
-			log: loggerspy
-		}
-	});
 	
 	describe('Player Object Basic test', () => {
 
 		it('should return Player object', () => {
 			var player1 = new Player();
-			expect(player1).is.not.null;
-			expect(player1).is.not.undefined;
+			expect(player1).not.toBeNull();
+			expect(player1).not.toBeUndefined();
 		});
 
 		it('should have name property as string', () => {
 			var player1 = new Player();
-			expect(player1.name).is.not.undefined;
-			expect(player1.name).to.be.a.string;
+			expect(player1.name).not.toBeUndefined();
+			expect(typeof player1.name).toBe('string');
 		});
 
 		it('should have clientId property as string', () => {
 			var player1 = new Player();
-			expect(player1.clientId).is.not.undefined;
-			expect(player1.clientId).to.be.a.string;
+			expect(player1.clientId).not.toBeUndefined();
+			expect(typeof player1.clientId).toBe('string');
 		});
 	});
 
@@ -52,7 +44,7 @@ describe('Player Unit Test', () => {
 		it('should be able to set name via constructor', () => {
 			var expectedName = 'PlayerTest';
 			var player1 = new Player(expectedName);
-			expect(player1.name).to.eq(expectedName);
+			expect(player1.name).toEqual(expectedName);
 		});
 	});
 
@@ -61,26 +53,26 @@ describe('Player Unit Test', () => {
 		it('should be able to set clientId via constructor', () => {
 			var expectedClientId = 'ClientTest';
 			var player1 = new Player(null, expectedClientId);
-			expect(player1.clientId).to.eq(expectedClientId);
+			expect(player1.clientId).toEqual(expectedClientId);
 		});
 	});
 
 	describe('Given user want to loggerspy player', () => {
 
-		afterEach('Clean up spy counter', () => {
-			loggerspy.resetHistory();
+		afterEach(() => {
+			loggerspy.mockClear();
 		});
 
 		it('should have loggerspy method', () => {
-			expect((new Player()).log).is.not.undefined;
+			expect((new Player()).log).not.toBeUndefined();
 		});
 
 		it('should call loggerspy', () => {
 			var playername = 'PlayerTest';
 			var clientId = 'Id';
 			(new Player(playername, clientId)).log();
-			loggerspy.should.have.been.calledOnce;
-			loggerspy.should.have.been.calledWith('\tPlayer name: ' + playername + ', id: ' + clientId + '\n');
+			expect(loggerspy).toHaveBeenCalledTimes(1);
+			expect(loggerspy).toHaveBeenCalledWith('\tPlayer name: ' + playername + ', id: ' + clientId + '\n');
 		});
 	});
 });

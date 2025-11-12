@@ -8,17 +8,10 @@
  */
 const http = require('http');
 const io = require('socket.io-client');
-const proxyquire = require('proxyquire').noPreserveCache();
-const sinon = require('sinon');
+
 const SocketTester = require('socket-tester');
 const SharedEnum = require('../../public/js/sharedenum');
 
-
-/**
- * Utils
- * @private
- */
-const expect = require('chai').expect;
 
 /**
  * Constances
@@ -34,13 +27,11 @@ const TableEventType = SharedEnum.TableEventType;
  * Unit tested
  * @private
  */
-var log = sinon.spy();
-const iohandler = proxyquire.load('../../components/iohandler', {
-	'../utils': {
-		log: log,
-		'@noCallThru': true
-	}
-});
+const log = jest.fn();
+
+
+
+const iohandler = require('../../components/iohandler');
 
 /**
  * Test settings
@@ -57,7 +48,7 @@ describe('Events handler Test Suite', () => {
 
 	var server, ioServer;
 	var table;
-	before('Set up server', () => {
+	beforeAll(() => {
 		server = http.createServer((req, res) => {
 			res.write('Hello world!');
 			res.end();
@@ -65,18 +56,18 @@ describe('Events handler Test Suite', () => {
 		server.listen(PORT);
 		table = {
 			players: ['player1', 'player2'],
-			clear: sinon.spy(),
-			addPlayer: sinon.spy(),
-			getLength: sinon.stub()
+			clear: jest.fn(),
+			addPlayer: jest.fn(),
+			getLength: jest.fn()
 		};
 		ioServer = iohandler(server, table);
 	});
 
-	after('Close server', (done) => {
+	afterAll((done) => {
 		server.close(done);
 	});
 
-	context('Single or multiple client', () => {
+	describe('Single or multiple client', () => {
 
 		// Util function killer timeout
 		function killClient(client, fn, time) {
@@ -103,44 +94,44 @@ describe('Events handler Test Suite', () => {
 
 		function validateRegex(pattern, positive, negative){
 			var regx = new RegExp(pattern);
-			expect(regx.test(positive)).to.be.true;
-			expect(regx.test(negative)).to.be.false;
+			expect(regx.test(positive)).toBe(true);
+			expect(regx.test(negative)).toBe(false);
 		}
 
-		before('Testing connect regex', () => {
+		beforeAll(() => {
 			validateRegex(patternConnected,
 				'Connected. ID: Q-abf2C4d_448e',
 				'Should not pass. ID: Q-abf2C4_d448e');
 		});
 
-		before('Testing disconnect regex', () => {
+		beforeAll(() => {
 			validateRegex(patternDisconnected,
 				'Disconnected ID: Q-abf2C4d448e',
 				'Should not pass. ID: Q-abf2C4d448e');
 		});
 
-		before('Testing tableClear regex', () => {
+		beforeAll(() => {
 			validateRegex(patternClearTable,
 				'Clear sent by: Q-abf2C4d_448e',
 				'Should not pass. ID: Q-abf2C4_d448e');
 		});
 
-		before('Testing addPlayer regex', () => {
+		beforeAll(() => {
 			validateRegex(patternAddPlayer,
 				'Add received from: Q-abf2C4d_448e',
 				'Should not pass. ID: Q-abf2C4_d448e');
 		});
 
-		before('Testing full table regex', () => {
+		beforeAll(() => {
 			validateRegex(patternFullTable,
 				'Full table sent to Q-abf2C4d_448e',
 				'Should not pass. ID: Q-abf2C4_d448e');
 		});
 
-		afterEach('Reset spy counter', () => {
-			table.clear.resetHistory();
-			table.addPlayer.resetHistory();
-			table.getLength.resetHistory();
+		afterEach(() => {
+			table.clear.mockClear();
+			table.addPlayer.mockClear();
+			table.getLength.mockClear();
 			if (table.full) {
 				table.full = false;
 			}
@@ -153,7 +144,7 @@ describe('Events handler Test Suite', () => {
 			client1.once('connect', () => {
 				clearTimeout(killer);
 				try {
-					expect(log.calledWith(sinon.match(patternConnected))).to.be.true;
+					expect(log).toHaveBeenCalledWith(expect.stringMatching(patternConnected));
 					client1.disconnect();
 					done();
 				} catch (e) {
@@ -169,7 +160,7 @@ describe('Events handler Test Suite', () => {
 			client1.once(TableEventType.DRAW_TABLE, (playerlist) => {
 				clearTimeout(killer);
 				try {
-					expect(playerlist).to.deep.equal(table.players);
+					expect(playerlist).toEqual(table.players);
 					client1.disconnect();
 					done();
 				} catch (e) {
@@ -187,7 +178,7 @@ describe('Events handler Test Suite', () => {
 			client1.once('disconnect', () => {
 				clearTimeout(killer);
 				try {
-					expect(log.calledWith(sinon.match(patternDisconnected))).to.be.true;
+					expect(log).toHaveBeenCalledWith(expect.stringMatching(patternDisconnected));
 					done();
 				} catch (e) {
 					done(e);
@@ -205,8 +196,8 @@ describe('Events handler Test Suite', () => {
 			client1.once(ChatEventType.CHAT, () => {
 				clearTimeout(killer);
 				try {
-					expect(log.calledWith('message: ' + msg));
-					expect(log.calledWith('chat msg sent.'));
+					expect(log).toHaveBeenCalledWith('message: ' + msg);
+					expect(log).toHaveBeenCalledWith('chat msg sent.');
 					client1.disconnect();
 					done();
 				} catch (e) {
@@ -250,9 +241,9 @@ describe('Events handler Test Suite', () => {
 			client1.once(TableEventType.CLEAR_TABLE, () => {
 				clearTimeout(killer);
 				try {
-					expect(log.calledWith(sinon.match(patternClearTable))).to.be.true;
-					expect(log.calledWith('update table sent')).to.be.true;
-					expect(table.clear.called).to.be.true;
+					expect(log).toHaveBeenCalledWith(expect.stringMatching(patternClearTable));
+					expect(log).toHaveBeenCalledWith('update table sent');
+					expect(table.clear).toHaveBeenCalled();
 					client1.disconnect();
 					done();
 				} catch (e) {
@@ -276,10 +267,10 @@ describe('Events handler Test Suite', () => {
 			client1.once(TableEventType.UPDATE_TABLE, (players) => {
 				clearTimeout(killer);
 				try {
-					expect(log.calledWith(sinon.match(patternAddPlayer))).to.be.true;
-					expect(players).to.deep.equal(table.players);
-					expect(table.addPlayer.called).to.be.true;
-					expect(log.calledWith('Player added. Sending Update Table event')).to.be.true;
+					expect(log).toHaveBeenCalledWith(expect.stringMatching(patternAddPlayer));
+					expect(players).toEqual(table.players);
+					expect(table.addPlayer).toHaveBeenCalled();
+					expect(log).toHaveBeenCalledWith('Player added. Sending Update Table event');
 					client1.disconnect();
 					done();
 				} catch (e) {
@@ -306,9 +297,9 @@ describe('Events handler Test Suite', () => {
 			client1.once(TableEventType.FULL_TABLE, () => {
 				clearTimeout(killer);
 				try {
-					expect(log.calledWith('Table is full')).to.be.true;
-					expect(log.calledWith(sinon.match(patternFullTable))).to.be.true;
-					expect(table.addPlayer.called).to.be.false;
+					expect(log).toHaveBeenCalledWith('Table is full');
+					expect(log).toHaveBeenCalledWith(expect.stringMatching(patternFullTable));
+					expect(table.addPlayer).not.toHaveBeenCalled();
 					client1.disconnect();
 					done();
 				} catch (e) {
@@ -377,7 +368,7 @@ describe('Events handler Test Suite', () => {
 						setTimeout(() => {
 							try {
 								clearTimeout(killer);
-								expect(called).to.equal(2);
+								expect(called).toBe(2);
 								disconnect([client1, client2, client3], done);
 							} catch (e) {
 								// Need to disconnect clients if test failed

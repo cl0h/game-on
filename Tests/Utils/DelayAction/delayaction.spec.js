@@ -5,9 +5,8 @@
  * Test dependencies
  * @private
  */
-const chai = require('chai');
-const assert = chai.assert;
-chai.should();
+
+
 
 /**
  * Module tested
@@ -42,19 +41,19 @@ describe('DelayAction unit test', () => {
 	describe('Class definition', () => {
 
 		it('should have constructor', () => {
-			assert.isDefined((new DelayAction()), 'Construct');
+			expect((new DelayAction())).toBeDefined();
 		});
 
 		it('should have property timeout not exposed', () => {
-			assert.isUndefined((new DelayAction()).timeout, 'Timeout not exposed');
-			assert.isUndefined((new DelayAction()).watcher, 'Timeout not exposed');
+			expect((new DelayAction()).timeout).not.toBeDefined();
+			expect((new DelayAction()).watcher).not.toBeDefined();
 
 		});
 
 
 
 		it('should have a cancel function', () => {
-			assert.isFunction((new DelayAction()).cancel, 'Cancel is function?');
+			expect(typeof (new DelayAction()).cancel).toBe('function');
 		});
 
 	});
@@ -65,24 +64,24 @@ describe('DelayAction unit test', () => {
 			let time = 5;
 			let action = function() {};
 			let da = new DelayAction(action, time);
-			assert.equal(da.time, time);
-			assert.equal(da.action, action);
+			expect(da.time).toEqual(time);
+			expect(da.action).toEqual(action);
 		});
 
 		it('should validate argument provided', () => {
 			let action = 'invalid action';
 
-			(() => {
+			expect((() => {
 				new DelayAction(action, 500);
-			}).should.throw(TypeError);
+			})).toThrow(TypeError);
 
-			(() => {
+			expect((() => {
 				new DelayAction(function() {});
-			}).should.not.throw(TypeError);
+			})).not.toThrow(TypeError);
 
-			(() => {
+			expect((() => {
 				new DelayAction(function() {}, null, 'test');
-			}).should.not.throw(TypeError);
+			})).not.toThrow(TypeError);
 		});
 
 	});
@@ -92,37 +91,37 @@ describe('DelayAction unit test', () => {
 		it('should have property action with null as default', () => {
 
 			let timer = new DelayAction();
-			assert.isDefined(timer.action, 'Action defined?');
-			assert.isNull(timer.action, 'Action null?');
+			expect(timer.action).toBeDefined();
+			expect(timer.action).toBeNull();
 
 		});
 
 		it('should not exposed _action', () => {
-			assert.isUndefined((new DelayAction())._action, 'Action undefined?');
+			expect((new DelayAction())._action).not.toBeDefined();
 		});
 
 		it('should allow to set action', () => {
 			let timer = new DelayAction();
-			(() => {
+			expect((() => {
 				timer.action = function() {};
-			}).should.not.throw();
+			})).not.toThrow();
 
 		});
 
 		it('should throw when other than function', () => {
 			let timer = new DelayAction();
 
-			(() => {
+			expect((() => {
 				timer.action = 'Error type';
-			}).should.throw(TypeError);
+			})).toThrow(TypeError);
 
-			(() => {
+			expect((() => {
 				timer.action = Object.create();
-			}).should.throw(TypeError);
+			})).toThrow(TypeError);
 
-			(() => {
+			expect((() => {
 				timer.action = [];
-			}).should.throw(TypeError);
+			})).toThrow(TypeError);
 
 		});
 
@@ -132,37 +131,37 @@ describe('DelayAction unit test', () => {
 
 		it('should have property time with 0 as default', () => {
 			let timer = new DelayAction();
-			assert.isDefined(timer.time, 'Time defined?');
-			assert.equal(timer.time, 0, 'Time set 0 per default');
+			expect(timer.time).toBeDefined();
+			expect(timer.time).toEqual(0);
 		});
 
 		it('should not exposed _ms', () => {
-			assert.isUndefined((new DelayAction())._ms, '_ms not exist?');
+			expect((new DelayAction())._ms).not.toBeDefined();
 		});
 
 		it('should set time', () => {
 			let expected = 100;
 			let timer = new DelayAction();
 			timer.time = expected;
-			assert.equal(timer.time, expected, 'Value set?');
+			expect(timer.time).toEqual(expected);
 		});
 
 		it('should not accept others than number', () => {
-			(() => {
+			expect((() => {
 				(new DelayAction()).time = 'hello string';
-			}).should.throw(TypeError);
+			})).toThrow(TypeError);
 
-			(() => {
+			expect((() => {
 				(new DelayAction()).time = Object.create();
-			}).should.throw(TypeError);
+			})).toThrow(TypeError);
 
-			(() => {
+			expect((() => {
 				(new DelayAction()).time = function() {};
-			}).should.throw(TypeError);
+			})).toThrow(TypeError);
 
-			(() => {
+			expect((() => {
 				(new DelayAction()).time = [];
-			}).should.throw(TypeError);
+			})).toThrow(TypeError);
 
 		});
 
@@ -173,19 +172,19 @@ describe('DelayAction unit test', () => {
 		it('should set at 0 if value not provided', () => {
 			var timer = new DelayAction();
 			timer.setTime();
-			assert.equal(timer.time, 0);
+			expect(timer.time).toEqual(0);
 		});
 
 		it('should set at 0 if value null', () => {
 			var timer = new DelayAction();
 			timer.setTime(null);
-			assert.equal(timer.time, 0);
+			expect(timer.time).toEqual(0);
 		});
 	});
 	describe('Start method', () => {
 
 		it('should have a start function', () => {
-			assert.isFunction((new DelayAction()).start, 'Start is function?');
+			expect(typeof (new DelayAction()).start).toBe('function');
 		});
 
 
@@ -223,7 +222,7 @@ describe('DelayAction unit test', () => {
 			setTimeout(() => {
 				timer.action = function() {
 					clearTimeout(killer);
-					assert.isOk(true);
+					expect(true).toBeTruthy();
 					done();
 				};
 			}, 2);
@@ -236,7 +235,7 @@ describe('DelayAction unit test', () => {
 	describe('startWith', () => {
 
 		it('should have the method', () => {
-			assert.isFunction((new DelayAction()).startWith, 'startWith function?');
+			expect(typeof (new DelayAction()).startWith).toBe('function');
 		});
 
 		it('should pass arguments to function', (done) => {
@@ -250,9 +249,9 @@ describe('DelayAction unit test', () => {
 			da.time = 5;
 			da.action = function(arg1, arg2, arg3) {
 				clearTimeout(killer);
-				assert.equal(arg1, expected1);
-				assert.equal(arg2, expected2);
-				assert.equal(arg3, expected3);
+				expect(arg1).toEqual(expected1);
+				expect(arg2).toEqual(expected2);
+				expect(arg3).toEqual(expected3);
 				done();
 			};
 
@@ -263,7 +262,7 @@ describe('DelayAction unit test', () => {
 	describe('Cancel', () => {
 
 		it('should have the method', () => {
-			assert.isFunction((new DelayAction()).cancel, 'Cancel is function?');
+			expect(typeof (new DelayAction()).cancel).toBe('function');
 		});
 
 		it('should cancel action from running', (done) => {
@@ -294,9 +293,9 @@ describe('DelayAction unit test', () => {
 			};
 
 			timer.start();
-			(() => {
+			expect((() => {
 				timer.cancel('this is not function.');
-			}).should.throw(TypeError);
+			})).toThrow(TypeError);
 		});
 
 		it('should cancel event if no callback provided', (done) => {
@@ -310,9 +309,9 @@ describe('DelayAction unit test', () => {
 			};
 
 			timer.start();
-			(() => {
+			expect((() => {
 				timer.cancel();
-			}).should.not.throw(TypeError);
+			})).not.toThrow(TypeError);
 			clearTimeout(killer);
 			done();
 		});

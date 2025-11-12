@@ -2,11 +2,7 @@
 // Test for table
 
 'use strict';
-// Dependencies
-const chai = require('chai');
-const sinon = require('sinon');
-// Utils
-const expect = chai.expect;
+
 
 // Import
 const Table = require('./table');
@@ -29,7 +25,7 @@ describe('Table Unit Testing', () => {
 		for (var i = 0; i < number; i++) {
 			players.push({
 				name: 'Player' + i,
-				log: sinon.spy()
+				log: jest.fn()
 			});
 
 			if(opt_foosballTable !== undefined){
@@ -45,27 +41,27 @@ describe('Table Unit Testing', () => {
 
 		it('should return object', () => {
 			var table = new Table();
-			expect(table).is.not.null;
-			expect(table).is.not.undefined;
+			expect(table).not.toBeNull();
+			expect(table).toBeDefined();
 		});
 
 		it('should have a players list', () => {
 			var table = new Table();
-			expect(table.players).is.not.undefined;
-			expect(table.players).to.be.an('array');
-			expect(table.players).to.be.empty;
+			expect(table.players).toBeDefined();
+			expect(Array.isArray(table.players)).toBe(true);
+			expect(table.players).toHaveLength(0);
 		});
 
 		it('should have a maximum players', () => {
 			var table = new Table();
-			expect(table.MAX_PLAYERS).is.not.undefined;
-			expect(table.MAX_PLAYERS).to.eq(4);
+			expect(table.MAX_PLAYERS).toBeDefined();
+			expect(table.MAX_PLAYERS).toBe(4);
 		});
 
 		it('should have indicator if table full', () => {
 			var table = new Table();
-			expect(table.full).is.not.undefined;
-			expect(table.full).to.be.false;
+			expect(table.full).toBeDefined();
+			expect(table.full).toBe(false);
 		});
 	});
 
@@ -73,19 +69,19 @@ describe('Table Unit Testing', () => {
 
 		var players;
 
-		beforeEach('Init players', () => {
+		beforeEach(() => {
 			players = createPlayers(4);
 		});
 
 		it('should have a method', () => {
-			expect((new Table()).addPlayer).is.not.undefined;
+			expect((new Table()).addPlayer).toBeDefined();
 		});
 
 		it('should add player to list', () => {
 			var table = new Table();
 			var player1 = players[0];
 			table.addPlayer(player1);
-			expect(table.players).to.deep.include.members([player1]);
+			expect(table.players).toEqual(expect.arrayContaining([player1]));
 		});
 
 		it('should not contains player if not added', () => {
@@ -93,7 +89,7 @@ describe('Table Unit Testing', () => {
 			var player1 = players[0];
 			var player2 = players[1];
 			table.addPlayer(player1);
-			expect(table.players).to.not.deep.include.members([player2]);
+			expect(table.players).not.toEqual(expect.arrayContaining([player2]));
 		});
 
 		it('should update if full state', () => {
@@ -101,13 +97,13 @@ describe('Table Unit Testing', () => {
 			var i = 0;
 			while (i < players.length - 1) {
 				table.addPlayer(players[i]);
-				expect(table.full).to.be.false;
+				expect(table.full).toBe(false);
 				i++;
 			}
 
 			i++;
 			table.addPlayer(players[i]);
-			expect(table.full).to.be.true;
+			expect(table.full).toBe(true);
 		});
 
 		it('should not add player if table full', () => {
@@ -121,7 +117,7 @@ describe('Table Unit Testing', () => {
 			};
 
 			table.addPlayer(newPlayer);
-			expect(table.players).to.not.deep.include.members([newPlayer]);
+			expect(table.players).not.toEqual(expect.arrayContaining([newPlayer]));
 		});
 	});
 
@@ -129,20 +125,20 @@ describe('Table Unit Testing', () => {
 
 		var players, foosballTable;
 
-		beforeEach('Init players', () => {
+		beforeEach(() => {
 			foosballTable = new Table();
 			players = createPlayers(4, foosballTable);
-			expect(foosballTable.full).to.be.true;
+			expect(foosballTable.full).toBe(true);
 		});
 
 		it('should have method to call players log', () => {
-			expect((new Table()).logPlayers).is.not.undefined;
+			expect((new Table()).logPlayers).toBeDefined();
 		});
 
 		it('should call each player log', () => {
 			foosballTable.logPlayers();
 			for (var i = 0; i < foosballTable.length; i++) {
-				players[i].log.calledOnce;
+				expect(players[i].log).toHaveBeenCalledTimes(1);
 			}
 		});
 	});
@@ -151,25 +147,25 @@ describe('Table Unit Testing', () => {
 
 		var players, foosballTable;
 
-		beforeEach('Init players', () => {
+		beforeEach(() => {
 			players = [];
 			foosballTable = new Table();
 			createPlayers(4, foosballTable);
-			expect(foosballTable.full).to.be.true;
+			expect(foosballTable.full).toBe(true);
 		});
 
 		it('should have the method clear', () => {
-			expect((new Table()).clear).is.not.undefined;
+			expect((new Table()).clear).toBeDefined();
 		});
 
 		it('should have an empty array', () => {
 			foosballTable.clear();
-			expect(foosballTable.players).to.be.an('array').that.is.empty;
+			expect(foosballTable.players).toEqual([]);
 		});
 
 		it('should not been full', () => {
 			foosballTable.clear();
-			expect(foosballTable.full).to.false;
+			expect(foosballTable.full).toBe(false);
 		});
 	});
 
@@ -177,22 +173,22 @@ describe('Table Unit Testing', () => {
 
 		let foosballTable;
 
-		beforeEach('Create table object', () =>{
+		beforeEach(() =>{
 			foosballTable = new Table();
 		});
 
 		it('should have getLength', () => {
-			expect((new Table()).getLength).is.not.undefined;
+			expect((new Table()).getLength).toBeDefined();
 		});
 
 		it('should return the number currently registered', () => {
 			createPlayers(2, foosballTable);
-			expect(foosballTable.getLength()).to.eq(2);
+			expect(foosballTable.getLength()).toBe(2);
 		});
 
 		it('should return max number players if table full', () => {
 			createPlayers(5, foosballTable);
-			expect(foosballTable.getLength()).to.eq(4);
+			expect(foosballTable.getLength()).toBe(4);
 		});
 
 	});
