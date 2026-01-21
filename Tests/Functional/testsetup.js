@@ -10,9 +10,8 @@ process.env.NODE_ENV = "test";
 /**
  * Register test functions
  */
-const chai = require('chai');
-global.expect = chai.expect;
-global.assert = chai.assert;
+
+
 
 /**
  * Test Module Dependencies
@@ -27,7 +26,7 @@ module.exports.testServerBeforeAfter = function testServerBeforeAfter(testargs){
 	
 	let server;
 
-	before('Setting up server', (done) =>{
+	beforeAll((done) =>{
 		TestServer.run()
 		.then(testserver =>{
 			testargs.url = 'http://localhost:' + testserver.address().port;
@@ -38,7 +37,7 @@ module.exports.testServerBeforeAfter = function testServerBeforeAfter(testargs){
 		});
 	});
 
-	after('Turn off test server', (done) =>{
+	afterAll((done) =>{
 		server.close(done);
 	});
 };

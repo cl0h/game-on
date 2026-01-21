@@ -7,12 +7,9 @@ process.env.NODE_ENV = 'test';
  * Test dependencies
  * @private
  */
-const chai = require('chai');
-const sinon = require('sinon');
-const sinonchai = require('sinon-chai');
+
 const fork = require('child_process').fork;
 const Path = require('path');
-const proxyquire = require('proxyquire').noPreserveCache();
 
 /**
  * Constances
@@ -24,9 +21,11 @@ const INDEX_PATH = Path.resolve(__dirname, './index.js');
  * Utils
  * @private
  */
-const expect = chai.expect;
-chai.should();
-chai.use(sinonchai);
+
+
+const logger = jest.fn();
+
+
 
 describe('Index unit test', () => {
 
@@ -39,24 +38,17 @@ describe('Index unit test', () => {
 	 * @param  {function} logger [Function used for logging]
 	 * @return {application}     [Individual application]
 	 */
-	function loadTestModule(logger) {
-		if (logger === undefined) {
-			logger = sinon.spy();
-		}
-		return proxyquire.load('./index', {
-			'./utils': {
-				log: logger
-			}
-		});
+	function loadTestModule() {
+		return require('./index');
 	}
 
 	describe('Start and shutdown', () => {
 
 		it('should shutdown', (done) => {
-			(() => {
+			expect(() => {
 				var app = loadTestModule();
 				app.server.close(done);
-			}).should.not.throw();
+			}).not.toThrow();
 		});
 	});
 
@@ -64,7 +56,7 @@ describe('Index unit test', () => {
 
 		it('should listen to default port 3000', (done) => {
 			var app = loadTestModule();
-			expect(app.server.address().port).to.eq(3000);
+			expect(app.server.address().port).toEqual(3000);
 			app.server.close(done);
 		});
 
@@ -73,7 +65,7 @@ describe('Index unit test', () => {
 			process.env.PORT = port;
 			var app = loadTestModule();
 			try {
-				expect(app.server.address().port).to.eq(port);
+				expect(app.server.address().port).toEqual(port);
 			} catch (e) {
 				throw e;
 			} finally {
@@ -95,7 +87,7 @@ describe('Index unit test', () => {
 
 			var appfork = fork(INDEX_PATH);
 			appfork.on('message', (msg) => {
-				expect(msg).to.eq('listening');
+				expect(msg).toEqual('listening');
 				clearTimeout(timeout);
 				appfork.kill();
 				done();
@@ -127,8 +119,8 @@ describe('Index unit test', () => {
 			});
 			context.module.exports = context;
 			VM.runInContext(module, context, INDEX_PATH);
-			expect(process.env.PORT).is.undefined;
-			expect(context.server.address().port).to.eq(port);
+			expect(process.env.PORT).toBeUndefined();
+			expect(context.server.address().port).toEqual(port);
 			try{
 				context.server.close();
 			}catch(e){

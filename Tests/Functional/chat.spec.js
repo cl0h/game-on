@@ -18,24 +18,24 @@ describe('Chat Test Suite',() =>{
 	
 	var browser = new Browser();
 	
-	before('Visit chat page', (done) =>{
-		Helpers.visitAndValidate(browser,testargs.url + '/', done);
+	beforeAll((done) => {
+		Helpers.visitAndValidate(browser, testargs.url + '/', done);
 	});
-
-	after('Close browser', ()=>{
+	
+	afterAll(() => {
 		browser.window.close();
 	});
 
-	context('When landing on the page',() =>{
+	describe('When landing on the page', () =>{
 
 		it('should contains chat elements', () =>{
-			expect(browser.query('#messages')).is.not.undefined;
-			expect(browser.query('#msg')).is.not.undefined;
-			expect(browser.query('#send')).is.not.undefined;
+			expect(browser.query('#messages')).toBeDefined();
+			expect(browser.query('#msg')).toBeDefined();
+			expect(browser.query('#send')).toBeDefined();
 		});
 	});
 
-	context('When submitting a message',() =>{
+	describe('When submitting a message', () =>{
 		
 		it('should populate chat box', (done) => {
 			var testMessage = 'This is a test';
@@ -46,8 +46,8 @@ describe('Chat Test Suite',() =>{
 				setTimeout(() =>{
 					// TODO: Better way to retrive messages
 					var messages = browser.text('#messages').split("\n");
-					expect(messages.length).to.eq(1);
-					expect(messages[0]).to.contains(testMessage);
+					expect(messages.length).toBe(1);
+					expect(messages[0]).toContain(testMessage);
 					done();
 				}, 10);
 			}).catch(done);

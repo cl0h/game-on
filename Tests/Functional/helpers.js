@@ -1,12 +1,6 @@
 /*jshint expr: true*/
 'use strict';
-// Basic static function for recurring test
 
-// Dependencies
-const chai = require('chai');
-const sinon = require('sinon');
-// Utils
-var expect = chai.expect;
 
 /**
  * Mock canvas element
@@ -25,9 +19,7 @@ var expect = chai.expect;
  */
 function mockifyCanvas(canvas) {
 
-	sinon.stub(canvas, 'tagName').get(function() {
-		return 'CANVAS';
-	});
+	Object.defineProperty(canvas, 'tagName', { get: function() { return 'CANVAS'; } });
 
 	canvas.getContext = function() {
 		return {
@@ -71,8 +63,8 @@ module.exports = {
 	visitAndValidate: function(browser, path, done) {
 		browser.visit(path)
 			.then(() => {
-				expect(browser.status).to.eq(200);
-				expect(browser.success).to.be.true;
+				expect(browser.status).toBe(200);
+				expect(browser.success).toBe(true);
 				browser.wait({
 					element: '#canvas1'
 				}).then(() => {

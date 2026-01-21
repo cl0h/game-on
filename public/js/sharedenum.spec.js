@@ -7,14 +7,9 @@
  * Unit test dependencies
  * @private
  */
-const chai = require('chai');
 
-/**
- * Utils
- * @private
- */
-const assert = chai.assert;
-chai.should();
+
+
 
 describe('Shared Enum Unit Test', () => {
 
@@ -30,12 +25,12 @@ describe('Shared Enum Unit Test', () => {
 		}
 
 		arr_el.forEach( el => {
-			assert.isDefined(enum_type[el], el + ' defined?');
-			assert.typeOf(enum_type[el], 'string', el + ' is string?');
-			(() => {
+			expect(enum_type[el]).toBeDefined();
+			expect(typeof enum_type[el]).toBe('string');
+			expect((() => {
 				enum_type[el] = 'test';
-			}).should.throw(Error);
-			assert.equal(enum_type[el], el.toLowerCase(), el + 'read-only?');
+			})).toThrow(Error);
+			expect(enum_type[el]).toEqual(el.toLowerCase());
 		});
 	}
 
@@ -63,13 +58,13 @@ describe('Shared Enum Unit Test', () => {
 				VM.runInContext(module, ctx, module_path);
 
 				if ('exports' in ctx) {
-					assert.isDefined(ctx.exports.sharedEnum.PermissionType, 'undefined for context ' + context);
-					assert.isDefined(ctx.exports.sharedEnum.ChatEventType, 'undefined for context ' + context);
-					assert.isDefined(ctx.exports.sharedEnum.TableEventType, 'undefined for context ' + context);
+					expect(ctx.exports.sharedEnum.PermissionType).toBeDefined();
+					expect(ctx.exports.sharedEnum.ChatEventType).toBeDefined();
+					expect(ctx.exports.sharedEnum.TableEventType).toBeDefined();
 				} else {
-					assert.isDefined(ctx.sharedEnum.PermissionType, 'undefined for context ' + context);
-					assert.isDefined(ctx.sharedEnum.ChatEventType, 'undefined for context ' + context);
-					assert.isDefined(ctx.sharedEnum.TableEventType, 'undefined for context ' + context);
+					expect(ctx.sharedEnum.PermissionType).toBeDefined();
+					expect(ctx.sharedEnum.ChatEventType).toBeDefined();
+					expect(ctx.sharedEnum.TableEventType).toBeDefined();
 				}
 
 			});
@@ -81,12 +76,12 @@ describe('Shared Enum Unit Test', () => {
 	describe('PermissionType', () => {
 
 		var PermissionType;
-		before('Extract PermissionType', () => {
+		beforeAll(() => {
 			PermissionType = require('./sharedenum').PermissionType;
 		});
 
 		it('should exist', () => {
-			assert.isDefined(PermissionType, 'PermissionType declared?');
+			expect(PermissionType).toBeDefined();
 		});
 
 		it('should have properties read-only', () => {
@@ -97,12 +92,12 @@ describe('Shared Enum Unit Test', () => {
 	describe('Chat Event Type', () => {
 		
 		let ChatEventType;
-		before('Extract Chat Type', () => {
+		beforeAll(() => {
 			ChatEventType = require('./sharedenum').ChatEventType;
 		});
 
 		it('should exist', () => {
-			assert.isDefined(ChatEventType, 'Chat event type declared?');
+			expect(ChatEventType).toBeDefined();
 		});
 
 		it('should have properties read-only', () => {
@@ -113,12 +108,12 @@ describe('Shared Enum Unit Test', () => {
 	describe('Table Event Type', () => {
 		
 		var TableEventType;
-		before('Extract Table Event Type', () => {
+		beforeAll(() => {
 			TableEventType = require('./sharedenum').TableEventType;
 		});
 
 		it('should exist', () => {
-			assert.isDefined(TableEventType, 'Table event type declared?');
+			expect(TableEventType).toBeDefined();
 		});
 
 		it('should have properties read-only', () => {
