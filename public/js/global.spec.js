@@ -58,6 +58,10 @@ rewiremock.around(() => import('./global.js'), (mock) => {
 					log: jest.fn()
 				};
 
+				mock.mock('jquery', window.$);
+				globalJs = await import('./global.js');
+			});
+
 			it('should have message board', () => {
 				expect(globalJs.view.chat.$msgBoard).toBeDefined();
 			});
@@ -87,7 +91,7 @@ rewiremock.around(() => import('./global.js'), (mock) => {
 			});
 
 			let stubInstance;
-			beforeAll('Set up onclick getter/setter', () => {
+			beforeAll(() => {
 				stubInstance = jest.createMockFromModule('notification');
 			});
 
