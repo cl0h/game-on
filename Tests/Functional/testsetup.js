@@ -26,7 +26,7 @@ module.exports.testServerBeforeAfter = function testServerBeforeAfter(testargs){
 	
 	let server;
 
-	beforeAll('Setting up server', (done) =>{
+	beforeAll((done) =>{
 		TestServer.run()
 		.then(testserver =>{
 			testargs.url = 'http://localhost:' + testserver.address().port;
@@ -37,7 +37,7 @@ module.exports.testServerBeforeAfter = function testServerBeforeAfter(testargs){
 		});
 	});
 
-	afterAll('Turn off test server', (done) =>{
+	afterAll((done) =>{
 		server.close(done);
 	});
 };
