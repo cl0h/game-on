@@ -22,11 +22,6 @@ describe('Foosball Notifier Test Suite', () => {
 	var browser = new Browser();
 	
 
-	let sinonbox;
-	beforeAll(() => {
-		sinonbox = sinon.sandbox.create();
-	});
-
 	afterEach(() => {
 		jest.clearAllMocks();
 	});
@@ -133,7 +128,7 @@ describe('Foosball Notifier Test Suite', () => {
 					.then(() => {
 						try {
 							expect(canvas.toDataURL()).toBeDefined();
-							canvas.toDataURL().should.not.equal(blankDataUrl);
+							expect(canvas.toDataURL()).not.toEqual(blankDataUrl);
 							next(idx, array);
 						} catch (e) {
 							throw e;
