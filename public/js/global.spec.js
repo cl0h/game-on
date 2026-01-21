@@ -75,7 +75,7 @@ rewiremock.around(() => import('./global.js'), (mock) => {
 				window.$ = jquery(window);
 				window.io = () => new SocketIOMock().socketClient;
 				window.console = {
-					log: sinonbox.spy()
+					log: jest.fn()
 				};
 
 				mock.mock('jquery', window.$);
@@ -106,7 +106,9 @@ rewiremock.around(() => import('./global.js'), (mock) => {
 				win.document = browser.getDocument();
 				win.$ = jquery(win);
 				win.alert = jest.fn();
-				log: jest.fn();
+				win.console = {
+					log: jest.fn()
+				};
 				mock.mock('jquery', win.$);
 				const globalJsNoNotification = await import('./global.js');
 
@@ -117,7 +119,7 @@ rewiremock.around(() => import('./global.js'), (mock) => {
 			it(
                 'should request permission on DOMContentLoaded if not already granted',
                 () => {
-expect(window.Notification).toBeDefined();
+					expect(window.Notification).toBeDefined();
                     globalJs.notifyMe();
 
                     let evt = new window.Event('DOMContentLoaded');
@@ -145,7 +147,7 @@ expect(window.Notification).toBeDefined();
 
 				Object.keys(PermissionType)
 					.forEach((permission) => {
-						sinonbox.resetHistory();
+						jest.clearAllMocks();
 						window.Notification.permission = PermissionType[permission];
 						globalJs.notifyMe();
 						if (permission.toLowerCase() === PermissionType.GRANTED) {

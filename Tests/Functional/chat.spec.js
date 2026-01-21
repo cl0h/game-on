@@ -19,8 +19,12 @@ describe('Chat Test Suite',() =>{
 	var browser = new Browser();
 	
 	beforeAll((done) => {
-
+		Helpers.visitAndValidate(browser, testargs.url + '/', done);
+	});
+	
 	afterAll(() => {
+		browser.window.close();
+	});
 
 	describe('When landing on the page', () =>{
 
@@ -43,7 +47,7 @@ describe('Chat Test Suite',() =>{
 					// TODO: Better way to retrive messages
 					var messages = browser.text('#messages').split("\n");
 					expect(messages.length).toBe(1);
-					expect(messages[0]).toEqual(expect.arrayContaining([testMessage]));
+					expect(messages[0]).toContain(testMessage);
 					done();
 				}, 10);
 			}).catch(done);

@@ -1,7 +1,5 @@
-import * as chai from 'chai';
-import sinonChai from 'sinon-chai';
+import assert from 'assert';
 
-chai.use(sinonChai);
-
-export const expect = chai.expect;
-export const assert = chai.assert;
+// Expose Jest's global `expect` and Node's `assert` to keep the same public API
+export const expect = global.expect;
+export { assert };

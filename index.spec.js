@@ -120,7 +120,7 @@ describe('Index unit test', () => {
 			context.module.exports = context;
 			VM.runInContext(module, context, INDEX_PATH);
 			expect(process.env.PORT).toBeUndefined();
-			expect(context.server.address().port).to.eq(port);
+			expect(context.server.address().port).toEqual(port);
 			try{
 				context.server.close();
 			}catch(e){
