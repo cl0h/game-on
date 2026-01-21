@@ -36,9 +36,10 @@ This project uses GitHub Actions for continuous integration and continuous deplo
 The CI workflow (`.github/workflows/ci.yml`) runs the following checks:
 - **Code Linting**: Runs `npm run code:analysis` using jshint to check code quality
 - **Unit Tests**: Executes the Jest test suite with `npm test`
-- **Coverage Check**: Verifies test coverage meets minimum thresholds with `npm run coverage:check`
 
 The workflow runs on multiple Node.js versions (18.x and 20.x) to ensure compatibility.
+
+**Note**: The CI workflow currently uses `continue-on-error` for linting and testing steps to allow merging during the initial setup phase. See `KNOWN_ISSUES.md` for issues that need to be fixed before enabling strict enforcement.
 
 #### Security Scanning
 The CodeQL workflow (`.github/workflows/codeql-analysis.yml`) performs security analysis to identify potential vulnerabilities in the codebase.
